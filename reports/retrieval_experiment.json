@@ -1,0 +1,30 @@
+{
+  "n_questions": 50,
+  "top_k": 3,
+  "classifier_accuracy_on_eval": 0.86,
+  "baseline_top3_hit_rate": 0.88,
+  "filtered_top3_hit_rate": 0.76,
+  "improvement": -0.12,
+  "per_category": {
+    "Farmer": {
+      "n": 13,
+      "baseline_top3": 0.9231,
+      "filtered_top3": 0.8462
+    },
+    "Student": {
+      "n": 13,
+      "baseline_top3": 0.8462,
+      "filtered_top3": 0.8462
+    },
+    "Woman and Child": {
+      "n": 12,
+      "baseline_top3": 0.9167,
+      "filtered_top3": 0.6667
+    },
+    "Senior Citizen": {
+      "n": 12,
+      "baseline_top3": 0.8333,
+      "filtered_top3": 0.6667
+    }
+  }
+}

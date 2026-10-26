@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Government Scheme Helper</title>
+<style>
+  :root {
+    --bg: #f6f7fb; --card: #ffffff; --ink: #1c2333; --muted: #5b6478;
+    --accent: #4353c4; --accent-soft: #e8ebfa; --ok: #1e8e5a;
+    --warn: #b45309; --line: #e4e7f0; --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+  header { background: var(--card); border-bottom: 1px solid var(--line); padding: 18px 24px; }
+  .header-inner { max-width: 880px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  h1 { font-size: 20px; font-weight: 700; }
+  .subtitle { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  nav { display: flex; gap: 8px; }
+  nav button { border: 1px solid var(--line); background: var(--card); padding: 8px 16px; border-radius: 999px; cursor: pointer; font-size: 14px; color: var(--ink); }
+  nav button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  main { max-width: 880px; margin: 0 auto; padding: 24px 24px 64px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-top: 16px; }
+  textarea { width: 100%; min-height: 84px; resize: vertical; border: 1px solid var(--line); border-radius: 10px; padding: 12px; font: inherit; }
+  textarea:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .chip { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .btn { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 11px 22px; font-size: 15px; cursor: pointer; font-weight: 600; }
+  .btn:disabled { opacity: 0.55; cursor: default; }
+  .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); font-weight: 500; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .badge { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 600; }
+  .badge.grey { background: #eef0f5; color: var(--muted); }
+  .scheme { border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 12px; }
+  .scheme h3 { font-size: 16px; margin-bottom: 8px; }
+  .field { font-size: 14px; margin-top: 6px; line-height: 1.5; }
+  .field b { color: var(--muted); font-weight: 600; display: inline-block; min-width: 130px; }
+  .scheme a { color: var(--accent); font-size: 13px; word-break: break-all; }
+  .note { color: var(--muted); font-size: 12.5px; margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 10px; }
+  .feedback { margin-top: 14px; display: none; }
+  .fb-msg { font-size: 13.5px; color: var(--ok); margin-top: 8px; }
+  .fb-warn { font-size: 13.5px; color: var(--warn); margin-top: 8px; }
+  .catpick { display: none; margin-top: 10px; gap: 8px; flex-wrap: wrap; }
+  .catpick button { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
+  .catpick button.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .muted { color: var(--muted); font-size: 13.5px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+  .stat .v { font-size: 24px; font-weight: 700; }
+  .stat .l { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .bar { height: 8px; background: #eef0f5; border-radius: 999px; margin-top: 8px; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 12px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 12.5px; }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #answerArea { display: none; }
+  .error { background: #fdecec; border: 1px solid #f5c2c2; color: #9b1c1c; padding: 12px 16px; border-radius: 10px; margin-top: 14px; font-size: 14px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <h1>Government Scheme Helper</h1>
+      <div class="subtitle">Answers from official government scheme text, with sources. Information only.</div>
+    </div>
+    <nav>
+      <button id="tabAsk" class="active" onclick="showTab('ask')">Ask a question</button>
+      <button id="tabProgress" onclick="showTab('progress')">Learning progress</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="askView">
+    <div class="card">
+      <textarea id="question" placeholder="Describe your situation, e.g. I need financial help for my college education"></textarea>
+      <div class="chips" id="examples"></div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="askBtn" onclick="ask()">Find schemes</button>
+        <span class="muted">The app predicts your category, then searches only official scheme text.</span>
+      </div>
+      <div id="askError"></div>
+    </div>
+
+    <div id="answerArea">
+      <div class="card">
+        <div class="row">
+          <span class="badge" id="catBadge"></span>
+          <span class="muted" id="modelBadge"></span>
+        </div>
+        <p id="answerText" style="margin-top:12px; font-size:15px; line-height:1.6"></p>
+        <div id="schemes"></div>
+        <div class="note" id="infoNote"></div>
+        <div class="feedback" id="feedbackBlock">
+          <div class="row">
+            <span class="muted">Was this helpful?</span>
+            <button class="btn ghost" onclick="sendFeedback('up')">👍 Yes</button>
+            <button class="btn ghost" onclick="sendFeedback('down')">👎 No</button>
+          </div>
+          <div class="catpick" id="catPick"></div>
+          <div class="fb-msg" id="fbMsg"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="progressView" style="display:none">
+    <div class="stats" id="stats"></div>
+    <div class="card">
+      <h3 style="font-size:15px">Accuracy on the locked test set after each retraining round</h3>
+      <div id="chart" style="margin-top:12px"></div>
+      <div id="roundsTable"></div>
+      <p class="muted" style="margin-top:12px">The model is retrained after about 50 new labelled examples. The new model replaces the old one only if its score is not worse, and every version is kept.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+const API = "";
+let lastResult = null;
+let chosenCategory = null;
+
+const EXAMPLES = [
+  "I need financial help for my college education",
+  "I grow wheat on 2 acres and need money for seeds",
+  "I am pregnant and need government support",
+  "my father is 70 and has no income",
+];
+
+function showTab(tab) {
+  document.getElementById("askView").style.display = tab === "ask" ? "" : "none";
+  document.getElementById("progressView").style.display = tab === "progress" ? "" : "none";
+  document.getElementById("tabAsk").classList.toggle("active", tab === "ask");
+  document.getElementById("tabProgress").classList.toggle("active", tab === "progress");
+  if (tab === "progress") loadProgress();
+}
+
+function initExamples() {
+  const wrap = document.getElementById("examples");
+  EXAMPLES.forEach(q => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = q;
+    b.onclick = () => { document.getElementById("question").value = q; };
+    wrap.appendChild(b);
+  });
+}
+
+async function ask() {
+  const q = document.getElementById("question").value.trim();
+  const errBox = document.getElementById("askError");
+  errBox.innerHTML = "";
+  document.getElementById("answerArea").style.display = "none";
+  document.getElementById("feedbackBlock").style.display = "none";
+  document.getElementById("fbMsg").textContent = "";
+  document.getElementById("catPick").style.display = "none";
+  chosenCategory = null;
+  if (!q) { errBox.innerHTML = '<div class="error">Please type a question first.</div>'; return; }
+  const btn = document.getElementById("askBtn");
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Searching…';
+  try {
+    const resp = await fetch(API + "/api/ask", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: q })
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || "Request failed");
+    lastResult = data;
+    renderAnswer(data);
+  } catch (e) {
+    errBox.innerHTML = '<div class="error">' + escapeHtml(e.message) + '</div>';
+  } finally {
+    btn.disabled = false; btn.textContent = "Find schemes";
+  }
+}
+
+function renderAnswer(d) {
+  document.getElementById("answerArea").style.display = "block";
+  document.getElementById("catBadge").textContent =
+    "Predicted category: " + d.predicted_category + (d.confidence != null ? " (" + Math.round(d.confidence * 100) + "%)" : "");
+  const m = d.model || {};
+  document.getElementById("modelBadge").textContent =
+    "classifier: " + m.classifier + " v" + m.classifier_version + " · embeddings: " + m.embedding_backend;
+  document.getElementById("answerText").textContent = d.answer;
+  document.getElementById("infoNote").textContent = d.note;
+
+  const wrap = document.getElementById("schemes");
+  wrap.innerHTML = "";
+  (d.schemes || []).forEach(s => {
+    const div = document.createElement("div");
+    div.className = "scheme";
+    div.innerHTML =
+      '<h3>' + escapeHtml(s.scheme_name) + '</h3>' +
+      field("Eligibility", s.eligibility) +
+      field("Benefits", s.benefits) +
+      field("How to apply", s.how_to_apply) +
+      field("Documents required", s.documents_required) +
+      '<div class="field"><b>Official source</b> <a href="' + escapeHtml(s.source_url) + '" target="_blank" rel="noopener">' + escapeHtml(s.source_url) + '</a></div>';
+    wrap.appendChild(div);
+  });
+  if (!d.found) {
+    document.getElementById("feedbackBlock").style.display = "none";
+    return;
+  }
+  const fb = document.getElementById("feedbackBlock");
+  fb.style.display = "block";
+  const pick = document.getElementById("catPick");
+  pick.innerHTML = "";
+  fetchCatsForPick(pick);
+}
+
+function field(label, value) {
+  if (!value) return "";
+  return '<div class="field"><b>' + label + '</b> ' + escapeHtml(value) + '</div>';
+}
+
+async function fetchCatsForPick(pick) {
+  try {
+    const resp = await fetch(API + "/api/categories");
+    const data = await resp.json();
+    (data.categories || []).forEach(c => {
+      const b = document.createElement("button");
+      b.textContent = c;
+      b.onclick = () => {
+        chosenCategory = c;
+        pick.querySelectorAll("button").forEach(x => x.classList.remove("selected"));
+        b.classList.add("selected");
+      };
+      pick.appendChild(b);
+    });
+    window.__cats = data.categories;
+  } catch (e) { /* pick stays empty; server validates anyway */ }
+}
+
+async function sendFeedback(label) {
+  if (!lastResult) return;
+  const msg = document.getElementById("fbMsg");
+  msg.className = "fb-msg"; msg.textContent = "";
+  if (label === "down" && !chosenCategory) {
+    const pick = document.getElementById("catPick");
+    pick.style.display = "flex";
+    msg.className = "fb-warn";
+    msg.textContent = "Sorry it missed. Which category fits you? Pick one above and press No again.";
+    return;
+  }
+  try {
+    const resp = await fetch(API + "/api/feedback", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question: lastResult.question,
+        predicted_category: lastResult.predicted_category,
+        label: label,
+        correct_category: label === "down" ? chosenCategory : null,
+      })
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || "Feedback failed");
+    msg.textContent = "Thank you! Your feedback became a labelled example. " +
+      data.pending_examples + " of " + data.retrain_threshold +
+      " new examples collected for the next retraining round." +
+      (data.retrained ? " The model has been retrained (round " + data.round.round + ")." : "");
+    document.getElementById("catPick").style.display = "none";
+  } catch (e) {
+    msg.className = "fb-warn"; msg.textContent = e.message;
+  }
+}
+
+async function loadProgress() {
+  const stats = document.getElementById("stats");
+  stats.innerHTML = "";
+  try {
+    const resp = await fetch(API + "/api/progress");
+    const d = await resp.json();
+    const rounds = d.rounds || [];
+    const pct = d.pending_examples != null ? Math.min(100, Math.round(d.pending_examples / d.retrain_threshold * 100)) : 0;
+    stats.innerHTML =
+      stat(d.model_version, "current model version") +
+      stat(d.test_accuracy != null ? Math.round(d.test_accuracy * 100) + "%" : "—", "test accuracy") +
+      stat(rounds.length, "retraining rounds") +
+      '<div class="stat"><div class="v">' + d.pending_examples + "/" + d.retrain_threshold + '</div>' +
+      '<div class="l">feedback examples toward next retraining</div>' +
+      '<div class="bar"><span style="width:' + pct + '%"></span></div></div>';
+
+    drawChart(rounds, d.test_accuracy);
+    drawRoundsTable(rounds);
+  } catch (e) {
+    stats.innerHTML = '<div class="error">Could not load progress: ' + escapeHtml(e.message) + '</div>';
+  }
+}
+
+function stat(v, l) {
+  return '<div class="stat"><div class="v">' + v + '</div><div class="l">' + l + '</div></div>';
+}
+
+function drawChart(rounds, initialAcc) {
+  const box = document.getElementById("chart");
+  const pts = [{ round: 0, test_accuracy: initialAcc }, ...rounds.map(r => ({ round: r.round, test_accuracy: r.test_accuracy }))];
+  if (pts.length < 2 || initialAcc == null) {
+    box.innerHTML = '<p class="muted">No retraining rounds yet. The chart will appear after the first round.</p>';
+    return;
+  }
+  const w = 640, h = 180, pad = 36;
+  const min = Math.min(...pts.map(p => p.test_accuracy)) - 0.03;
+  const max = Math.max(...pts.map(p => p.test_accuracy)) + 0.03;
+  const x = r => pad + (w - 2 * pad) * (r.round / (pts.length - 1));
+  const y = a => h - pad - (h - 2 * pad) * ((a - min) / (max - min));
+  const line = pts.map((p, i) => (i ? "L" : "M") + x(p).toFixed(1) + "," + y(p.test_accuracy).toFixed(1)).join(" ");
+  const dots = pts.map(p => '<circle cx="' + x(p).toFixed(1) + '" cy="' + y(p.test_accuracy).toFixed(1) + '" r="4" fill="#4353c4"><title>round ' + p.round + ": " + Math.round(p.test_accuracy * 100) + '%</title></circle>').join("");
+  const labels = pts.map(p => '<text x="' + x(p).toFixed(1) + '" y="' + (h - 12) + '" font-size="10" fill="#5b6478" text-anchor="middle">' + p.round + '</text>').join("");
+  const yTicks = [min, (min + max) / 2, max].map(a =>
+    '<text x="' + (pad - 6) + '" y="' + (y(a) + 3).toFixed(1) + '" font-size="10" fill="#5b6478" text-anchor="end">' + Math.round(a * 100) + '%</text>').join("");
+  box.innerHTML = '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;max-width:640px">' +
+    '<line x1="' + pad + '" y1="' + (h - pad) + '" x2="' + (w - pad) + '" y2="' + (h - pad) + '" stroke="#e4e7f0"/>' +
+    '<path d="' + line + '" fill="none" stroke="#4353c4" stroke-width="2"/>' + dots + labels + yTicks +
+    '<text x="' + w / 2 + '" y="' + h + '" font-size="10" fill="#5b6478" text-anchor="middle">retraining round (0 = initial training)</text></svg>';
+}
+
+function drawRoundsTable(rounds) {
+  const box = document.getElementById("roundsTable");
+  if (!rounds.length) { box.innerHTML = ""; return; }
+  let html = '<table><tr><th>Round</th><th>When</th><th>New examples</th><th>Test accuracy</th><th>Old accuracy</th><th>Model updated?</th></tr>';
+  rounds.slice().reverse().forEach(r => {
+    html += '<tr><td>' + r.round + '</td><td>' + escapeHtml(r.timestamp) + '</td><td>' + r.n_new_examples +
+      '</td><td>' + Math.round(r.test_accuracy * 100) + '%</td><td>' +
+      (r.previous_test_accuracy != null ? Math.round(r.previous_test_accuracy * 100) + "%" : "—") +
+      '</td><td>' + (r.replaced ? "yes (v" + r.version + ")" : "no (kept old model)") + '</td></tr>';
+  });
+  box.innerHTML = html + "</table>";
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+initExamples();
+</script>
+</body>
+</html>

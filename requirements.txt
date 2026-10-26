@@ -1,0 +1,13 @@
+flask>=3.0
+scikit-learn>=1.4
+pandas>=2.0
+numpy>=1.26
+matplotlib>=3.7
+joblib>=1.3
+requests>=2.31
+
+# Optional but installed in the current environment: real dense sentence
+# embeddings (Sentence-BERT MiniLM). If it is not installed, the project
+# falls back to a TF-IDF based embedding so everything still runs offline.
+sentence-transformers>=2.7
+# fastembed>=0.3

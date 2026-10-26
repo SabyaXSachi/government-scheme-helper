@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+models/
+storage/
+reports/*.png
+.DS_Store
