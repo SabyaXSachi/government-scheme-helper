@@ -4,68 +4,213 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Government Scheme Helper</title>
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="%233f5bd9"/><circle cx="16" cy="16" r="7" fill="none" stroke="white" stroke-width="2.5"/><circle cx="16" cy="16" r="2.5" fill="white"/></svg>'>
 <style>
   :root {
-    --bg: #f6f7fb; --card: #ffffff; --ink: #1c2333; --muted: #5b6478;
-    --accent: #4353c4; --accent-soft: #e8ebfa; --ok: #1e8e5a;
-    --warn: #b45309; --line: #e4e7f0; --radius: 14px;
+    --bg: #f3f5fa;
+    --card: #ffffff;
+    --ink: #1c2333;
+    --muted: #5b6478;
+    --faint: #8a92a6;
+    --line: #e4e8f2;
+    --accent: #3f5bd9;
+    --accent-dark: #3247ad;
+    --accent-soft: #edf0fd;
+    --ok: #1e8e5a;
+    --warn: #b45309;
+    --r: 14px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
-  header { background: var(--card); border-bottom: 1px solid var(--line); padding: 18px 24px; }
-  .header-inner { max-width: 880px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  h1 { font-size: 20px; font-weight: 700; }
-  .subtitle { color: var(--muted); font-size: 13px; margin-top: 2px; }
-  nav { display: flex; gap: 8px; }
-  nav button { border: 1px solid var(--line); background: var(--card); padding: 8px 16px; border-radius: 999px; cursor: pointer; font-size: 14px; color: var(--ink); }
-  nav button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  main { max-width: 880px; margin: 0 auto; padding: 24px 24px 64px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; margin-top: 16px; }
-  textarea { width: 100%; min-height: 84px; resize: vertical; border: 1px solid var(--line); border-radius: 10px; padding: 12px; font: inherit; }
-  textarea:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .chip { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; color: var(--muted); }
-  .chip:hover { border-color: var(--accent); color: var(--accent); }
-  .btn { background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 11px 22px; font-size: 15px; cursor: pointer; font-weight: 600; }
-  .btn:disabled { opacity: 0.55; cursor: default; }
-  .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); font-weight: 500; }
-  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .badge { display: inline-block; background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 600; }
-  .badge.grey { background: #eef0f5; color: var(--muted); }
-  .scheme { border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 12px; }
-  .scheme h3 { font-size: 16px; margin-bottom: 8px; }
-  .field { font-size: 14px; margin-top: 6px; line-height: 1.5; }
-  .field b { color: var(--muted); font-weight: 600; display: inline-block; min-width: 130px; }
-  .scheme a { color: var(--accent); font-size: 13px; word-break: break-all; }
-  .note { color: var(--muted); font-size: 12.5px; margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 10px; }
-  .feedback { margin-top: 14px; display: none; }
-  .fb-msg { font-size: 13.5px; color: var(--ok); margin-top: 8px; }
-  .fb-warn { font-size: 13.5px; color: var(--warn); margin-top: 8px; }
-  .catpick { display: none; margin-top: 10px; gap: 8px; flex-wrap: wrap; }
-  .catpick button { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; }
-  .catpick button.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .muted { color: var(--muted); font-size: 13.5px; }
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-  .stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
-  .stat .v { font-size: 24px; font-weight: 700; }
-  .stat .l { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
-  .bar { height: 8px; background: #eef0f5; border-radius: 999px; margin-top: 8px; overflow: hidden; }
-  .bar span { display: block; height: 100%; background: var(--accent); }
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 12px; }
-  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
-  th { color: var(--muted); font-weight: 600; font-size: 12.5px; }
-  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px; margin-right: 6px; }
+  [hidden] { display: none !important; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--ink);
+    font-size: 15px; line-height: 1.55; min-height: 100vh;
+  }
+  ::selection { background: #cdd7fa; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- header ---------- */
+  header {
+    background: var(--card); border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .bar {
+    max-width: 860px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .mark {
+    width: 30px; height: 30px; border-radius: 9px; background: var(--accent);
+    display: grid; place-items: center; flex: none;
+  }
+  h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+  nav { display: flex; gap: 4px; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+  nav button {
+    border: none; background: transparent; cursor: pointer; font: inherit;
+    font-size: 13.5px; font-weight: 500; color: var(--muted);
+    padding: 6px 16px; border-radius: 999px;
+  }
+  nav button:hover { color: var(--ink); }
+  nav button.active { background: var(--card); color: var(--accent); font-weight: 600; box-shadow: 0 1px 3px rgba(16,24,40,.1); }
+
+  main { max-width: 860px; margin: 0 auto; padding: 34px 24px 60px; }
+
+  /* ---------- ask ---------- */
+  .hero { margin-bottom: 22px; }
+  .hero h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+  .hero p { color: var(--muted); margin-top: 6px; font-size: 15px; }
+
+  .ask-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+    box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 12px 32px -20px rgba(16,24,40,.18);
+    padding: 18px; transition: box-shadow .2s, border-color .2s;
+  }
+  .ask-card:focus-within { border-color: #b9c4ef; box-shadow: 0 0 0 4px var(--accent-soft), 0 12px 32px -20px rgba(16,24,40,.18); }
+  textarea {
+    width: 100%; min-height: 88px; resize: vertical; border: none; background: transparent;
+    padding: 4px 6px; font: inherit; font-size: 15.5px; color: var(--ink);
+  }
+  textarea:focus { outline: none; }
+  textarea::placeholder { color: var(--faint); }
+  .under { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .chip {
+    border: 1px solid var(--line); background: var(--card); border-radius: 999px;
+    padding: 6px 14px; font-size: 13px; cursor: pointer; font-family: inherit; color: var(--muted);
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+  .go {
+    margin-left: auto; border: none; cursor: pointer; font: inherit;
+    font-weight: 600; font-size: 14.5px; color: #fff; background: var(--accent);
+    border-radius: 10px; padding: 10px 24px;
+    box-shadow: 0 4px 14px -6px rgba(63,91,217,.6);
+    transition: background .15s, transform .12s;
+  }
+  .go:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .go:disabled { opacity: .6; cursor: default; transform: none; }
+  .spinner {
+    display: inline-block; width: 13px; height: 13px; vertical-align: -2px; margin-right: 7px;
+    border: 2px solid #fff; border-top-color: transparent; border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
   @keyframes spin { to { transform: rotate(360deg); } }
-  #answerArea { display: none; }
-  .error { background: #fdecec; border: 1px solid #f5c2c2; color: #9b1c1c; padding: 12px 16px; border-radius: 10px; margin-top: 14px; font-size: 14px; }
+
+  .error {
+    margin-top: 14px; background: #fdf0ee; border: 1px solid #f3d2cb; color: #a0432f;
+    padding: 11px 15px; border-radius: 10px; font-size: 14px;
+  }
+
+  /* ---------- answer ---------- */
+  #answerArea { margin-top: 26px; }
+  .answer-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+    box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 12px 32px -20px rgba(16,24,40,.14);
+    padding: 22px;
+    animation: rise .4s ease both;
+  }
+  .badges { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--accent-soft); color: var(--accent-dark);
+    border-radius: 999px; padding: 5px 14px; font-size: 13px; font-weight: 600;
+  }
+  .model-line { color: var(--faint); font-size: 12.5px; }
+  .lede { margin-top: 14px; font-size: 15.5px; line-height: 1.6; }
+  .lede.no-match { color: var(--warn); }
+
+  .schemes { margin-top: 16px; display: flex; flex-direction: column; gap: 12px; }
+  .scheme {
+    border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
+    background: #fbfcfe; transition: border-color .15s, box-shadow .15s;
+    animation: rise .4s ease both;
+  }
+  .scheme:hover { border-color: #c7d0ee; box-shadow: 0 6px 18px -12px rgba(16,24,40,.25); }
+  .scheme h3 { font-size: 16px; font-weight: 650; color: var(--accent-dark); }
+  .field { font-size: 14px; margin-top: 9px; line-height: 1.55; }
+  .field b { color: var(--muted); font-weight: 600; display: inline-block; min-width: 138px; }
+  .scheme a { color: var(--accent); font-size: 13.5px; word-break: break-all; }
+  .note {
+    margin-top: 16px; color: var(--muted); font-size: 12.5px;
+    background: var(--bg); border-radius: 8px; padding: 9px 13px;
+  }
+
+  /* ---------- feedback ---------- */
+  .feedback { margin-top: 16px; border-top: 1px dashed var(--line); padding-top: 14px; }
+  .fb-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .fb-q { font-size: 14px; color: var(--muted); }
+  .fbb {
+    border: 1px solid var(--line); background: var(--card); border-radius: 999px;
+    padding: 6px 16px; font: inherit; font-size: 13.5px; cursor: pointer; color: var(--ink);
+    transition: border-color .15s, background .15s;
+  }
+  .fbb:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .catpick { display: flex; margin-top: 12px; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .catpick .lead { font-size: 13.5px; color: var(--muted); }
+  .catpick button {
+    border: 1px solid var(--line); background: var(--card); border-radius: 999px;
+    padding: 5px 13px; font: inherit; font-size: 13px; cursor: pointer; color: var(--ink);
+  }
+  .catpick button:hover { border-color: var(--accent); color: var(--accent); }
+  .catpick button.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .fb-msg { margin-top: 10px; font-size: 13.5px; color: var(--ok); }
+  .fb-msg.warn { color: var(--warn); }
+
+  /* ---------- progress ---------- */
+  #progressView .hero { margin-bottom: 18px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 12px; }
+  .stat {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--r);
+    box-shadow: 0 1px 2px rgba(16,24,40,.04); padding: 16px 18px;
+    animation: rise .4s ease both;
+  }
+  .stat .v { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+  .stat .v small { font-size: 15px; color: var(--faint); font-weight: 600; }
+  .stat .l { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .bar { height: 7px; background: var(--line); border-radius: 99px; margin-top: 10px; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .8s ease; }
+
+  .panel {
+    margin-top: 14px; background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--r); box-shadow: 0 1px 2px rgba(16,24,40,.04); padding: 20px 22px;
+    animation: rise .4s ease both;
+  }
+  .panel h3 { font-size: 15.5px; font-weight: 650; }
+  .muted { color: var(--muted); font-size: 13.5px; }
+  .chart-note { font-size: 12px; color: var(--faint); margin-top: 6px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 12px; }
+  th { text-align: left; color: var(--faint); font-weight: 600; font-size: 12px; padding: 7px 10px 7px 0; border-bottom: 1px solid var(--line); }
+  td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line); }
+  td.num { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  .yes { color: var(--ok); font-weight: 600; }
+  .no { color: var(--faint); }
+
+  .colophon {
+    margin-top: 34px; padding-top: 14px; border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    font-size: 12.5px; color: var(--faint);
+  }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  @media (max-width: 620px) {
+    .bar { flex-direction: column; align-items: flex-start; }
+    .field b { min-width: 100%; }
+  }
 </style>
 </head>
 <body>
 <header>
-  <div class="header-inner">
-    <div>
+  <div class="bar">
+    <div class="brand">
+      <span class="mark">
+        <svg width="16" height="16" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="9" stroke="white" stroke-width="2.5"/>
+          <circle cx="16" cy="16" r="3" fill="white"/>
+        </svg>
+      </span>
       <h1>Government Scheme Helper</h1>
-      <div class="subtitle">Answers from official government scheme text, with sources. Information only.</div>
     </div>
     <nav>
       <button id="tabAsk" class="active" onclick="showTab('ask')">Ask a question</button>
@@ -76,47 +221,59 @@
 
 <main>
   <section id="askView">
-    <div class="card">
-      <textarea id="question" placeholder="Describe your situation, e.g. I need financial help for my college education"></textarea>
-      <div class="chips" id="examples"></div>
-      <div class="row" style="margin-top:14px">
-        <button class="btn" id="askBtn" onclick="ask()">Find schemes</button>
-        <span class="muted">The app predicts your category, then searches only official scheme text.</span>
-      </div>
-      <div id="askError"></div>
+    <div class="hero">
+      <h2>What do you need help with?</h2>
+      <p>Describe your situation in your own words — answers come from official scheme text, with sources.</p>
     </div>
 
-    <div id="answerArea">
-      <div class="card">
-        <div class="row">
+    <div class="ask-card">
+      <textarea id="question" autofocus placeholder="e.g. I need financial help for my college education"></textarea>
+      <div class="under">
+        <span id="examples" style="display:contents"></span>
+        <button class="go" id="askBtn" onclick="ask()">Find schemes</button>
+      </div>
+    </div>
+    <div id="askError"></div>
+
+    <div id="answerArea" hidden>
+      <div class="answer-card">
+        <div class="badges">
           <span class="badge" id="catBadge"></span>
-          <span class="muted" id="modelBadge"></span>
+          <span class="model-line" id="modelBadge"></span>
         </div>
-        <p id="answerText" style="margin-top:12px; font-size:15px; line-height:1.6"></p>
-        <div id="schemes"></div>
+        <p class="lede" id="answerText"></p>
+        <div class="schemes" id="schemes"></div>
         <div class="note" id="infoNote"></div>
-        <div class="feedback" id="feedbackBlock">
-          <div class="row">
-            <span class="muted">Was this helpful?</span>
-            <button class="btn ghost" onclick="sendFeedback('up')">👍 Yes</button>
-            <button class="btn ghost" onclick="sendFeedback('down')">👎 No</button>
+        <div class="feedback" id="feedbackBlock" hidden>
+          <div class="fb-row">
+            <span class="fb-q">Was this helpful?</span>
+            <button class="fbb" onclick="sendFeedback('up')">👍 Yes</button>
+            <button class="fbb" onclick="sendFeedback('down')">👎 No</button>
           </div>
-          <div class="catpick" id="catPick"></div>
+          <div class="catpick" id="catPick" hidden></div>
           <div class="fb-msg" id="fbMsg"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="progressView" style="display:none">
+  <section id="progressView" hidden>
+    <div class="hero">
+      <h2>Learning progress</h2>
+      <p>The model retrains after about 50 new labelled examples — and only replaces the old one if its score is not worse.</p>
+    </div>
     <div class="stats" id="stats"></div>
-    <div class="card">
-      <h3 style="font-size:15px">Accuracy on the locked test set after each retraining round</h3>
+    <div class="panel">
+      <h3>Accuracy on the locked test set after each retraining round</h3>
       <div id="chart" style="margin-top:12px"></div>
+      <div class="chart-note">Round 0 is the initial training · hover the dots for exact scores</div>
       <div id="roundsTable"></div>
-      <p class="muted" style="margin-top:12px">The model is retrained after about 50 new labelled examples. The new model replaces the old one only if its score is not worse, and every version is kept.</p>
     </div>
   </section>
+
+  <div class="colophon">
+    <span>48 schemes · 4 categories · English</span>
+  </div>
 </main>
 
 <script>
@@ -125,15 +282,15 @@ let lastResult = null;
 let chosenCategory = null;
 
 const EXAMPLES = [
-  "I need financial help for my college education",
-  "I grow wheat on 2 acres and need money for seeds",
-  "I am pregnant and need government support",
-  "my father is 70 and has no income",
+  { label: "Student", q: "I need financial help for my college education" },
+  { label: "Farmer", q: "I grow wheat on 2 acres and need money for seeds" },
+  { label: "Woman & Child", q: "I am pregnant and need government support" },
+  { label: "Senior Citizen", q: "my father is 70 and has no income" },
 ];
 
 function showTab(tab) {
-  document.getElementById("askView").style.display = tab === "ask" ? "" : "none";
-  document.getElementById("progressView").style.display = tab === "progress" ? "" : "none";
+  document.getElementById("askView").hidden = tab !== "ask";
+  document.getElementById("progressView").hidden = tab !== "progress";
   document.getElementById("tabAsk").classList.toggle("active", tab === "ask");
   document.getElementById("tabProgress").classList.toggle("active", tab === "progress");
   if (tab === "progress") loadProgress();
@@ -141,10 +298,11 @@ function showTab(tab) {
 
 function initExamples() {
   const wrap = document.getElementById("examples");
-  EXAMPLES.forEach(q => {
+  EXAMPLES.forEach(e => {
     const b = document.createElement("button");
-    b.className = "chip"; b.textContent = q;
-    b.onclick = () => { document.getElementById("question").value = q; };
+    b.className = "chip"; b.type = "button"; b.textContent = e.label;
+    b.title = e.q;
+    b.onclick = () => { document.getElementById("question").value = e.q; document.getElementById("question").focus(); };
     wrap.appendChild(b);
   });
 }
@@ -153,10 +311,9 @@ async function ask() {
   const q = document.getElementById("question").value.trim();
   const errBox = document.getElementById("askError");
   errBox.innerHTML = "";
-  document.getElementById("answerArea").style.display = "none";
-  document.getElementById("feedbackBlock").style.display = "none";
+  document.getElementById("answerArea").hidden = true;
   document.getElementById("fbMsg").textContent = "";
-  document.getElementById("catPick").style.display = "none";
+  document.getElementById("catPick").hidden = true;
   chosenCategory = null;
   if (!q) { errBox.innerHTML = '<div class="error">Please type a question first.</div>'; return; }
   const btn = document.getElementById("askBtn");
@@ -178,20 +335,23 @@ async function ask() {
 }
 
 function renderAnswer(d) {
-  document.getElementById("answerArea").style.display = "block";
+  document.getElementById("answerArea").hidden = false;
   document.getElementById("catBadge").textContent =
-    "Predicted category: " + d.predicted_category + (d.confidence != null ? " (" + Math.round(d.confidence * 100) + "%)" : "");
+    "Predicted: " + d.predicted_category + (d.confidence != null ? " · " + Math.round(d.confidence * 100) + "%" : "");
   const m = d.model || {};
   document.getElementById("modelBadge").textContent =
-    "classifier: " + m.classifier + " v" + m.classifier_version + " · embeddings: " + m.embedding_backend;
-  document.getElementById("answerText").textContent = d.answer;
+    "classifier " + m.classifier + " v" + m.classifier_version + " · embeddings " + m.embedding_backend;
+  const lede = document.getElementById("answerText");
+  lede.textContent = d.answer;
+  lede.classList.toggle("no-match", !d.found);
   document.getElementById("infoNote").textContent = d.note;
 
   const wrap = document.getElementById("schemes");
   wrap.innerHTML = "";
-  (d.schemes || []).forEach(s => {
+  (d.schemes || []).forEach((s, i) => {
     const div = document.createElement("div");
     div.className = "scheme";
+    div.style.animationDelay = (i * 70) + "ms";
     div.innerHTML =
       '<h3>' + escapeHtml(s.scheme_name) + '</h3>' +
       field("Eligibility", s.eligibility) +
@@ -201,15 +361,13 @@ function renderAnswer(d) {
       '<div class="field"><b>Official source</b> <a href="' + escapeHtml(s.source_url) + '" target="_blank" rel="noopener">' + escapeHtml(s.source_url) + '</a></div>';
     wrap.appendChild(div);
   });
-  if (!d.found) {
-    document.getElementById("feedbackBlock").style.display = "none";
-    return;
+
+  document.getElementById("feedbackBlock").hidden = !d.found;
+  if (d.found) {
+    const pick = document.getElementById("catPick");
+    pick.innerHTML = ""; pick.hidden = true;
+    fetchCatsForPick(pick);
   }
-  const fb = document.getElementById("feedbackBlock");
-  fb.style.display = "block";
-  const pick = document.getElementById("catPick");
-  pick.innerHTML = "";
-  fetchCatsForPick(pick);
 }
 
 function field(label, value) {
@@ -221,6 +379,10 @@ async function fetchCatsForPick(pick) {
   try {
     const resp = await fetch(API + "/api/categories");
     const data = await resp.json();
+    const lead = document.createElement("span");
+    lead.className = "lead";
+    lead.textContent = "Which category fits you?";
+    pick.appendChild(lead);
     (data.categories || []).forEach(c => {
       const b = document.createElement("button");
       b.textContent = c;
@@ -231,19 +393,17 @@ async function fetchCatsForPick(pick) {
       };
       pick.appendChild(b);
     });
-    window.__cats = data.categories;
-  } catch (e) { /* pick stays empty; server validates anyway */ }
+  } catch (e) { /* server validates anyway */ }
 }
 
 async function sendFeedback(label) {
   if (!lastResult) return;
   const msg = document.getElementById("fbMsg");
-  msg.className = "fb-msg"; msg.textContent = "";
+  msg.classList.remove("warn"); msg.textContent = "";
   if (label === "down" && !chosenCategory) {
-    const pick = document.getElementById("catPick");
-    pick.style.display = "flex";
-    msg.className = "fb-warn";
-    msg.textContent = "Sorry it missed. Which category fits you? Pick one above and press No again.";
+    document.getElementById("catPick").hidden = false;
+    msg.classList.add("warn");
+    msg.textContent = "Sorry it missed. Pick the category that fits you, then press No again.";
     return;
   }
   try {
@@ -262,9 +422,9 @@ async function sendFeedback(label) {
       data.pending_examples + " of " + data.retrain_threshold +
       " new examples collected for the next retraining round." +
       (data.retrained ? " The model has been retrained (round " + data.round.round + ")." : "");
-    document.getElementById("catPick").style.display = "none";
+    document.getElementById("catPick").hidden = true;
   } catch (e) {
-    msg.className = "fb-warn"; msg.textContent = e.message;
+    msg.classList.add("warn"); msg.textContent = e.message;
   }
 }
 
@@ -277,12 +437,14 @@ async function loadProgress() {
     const rounds = d.rounds || [];
     const pct = d.pending_examples != null ? Math.min(100, Math.round(d.pending_examples / d.retrain_threshold * 100)) : 0;
     stats.innerHTML =
-      stat(d.model_version, "current model version") +
+      stat(String(d.model_version), "current model version") +
       stat(d.test_accuracy != null ? Math.round(d.test_accuracy * 100) + "%" : "—", "test accuracy") +
-      stat(rounds.length, "retraining rounds") +
-      '<div class="stat"><div class="v">' + d.pending_examples + "/" + d.retrain_threshold + '</div>' +
-      '<div class="l">feedback examples toward next retraining</div>' +
-      '<div class="bar"><span style="width:' + pct + '%"></span></div></div>';
+      stat(String(rounds.length), "retraining rounds") +
+      '<div class="stat"><div class="v">' + d.pending_examples + '<small> / ' + d.retrain_threshold + '</small></div>' +
+      '<div class="l">examples toward next retraining</div>' +
+      '<div class="bar"><span style="width:0%" data-w="' + pct + '"></span></div></div>';
+    const bar = stats.querySelector(".bar span");
+    requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = bar.dataset.w + "%"; }));
 
     drawChart(rounds, d.test_accuracy);
     drawRoundsTable(rounds);
@@ -302,31 +464,35 @@ function drawChart(rounds, initialAcc) {
     box.innerHTML = '<p class="muted">No retraining rounds yet. The chart will appear after the first round.</p>';
     return;
   }
-  const w = 640, h = 180, pad = 36;
-  const min = Math.min(...pts.map(p => p.test_accuracy)) - 0.03;
-  const max = Math.max(...pts.map(p => p.test_accuracy)) + 0.03;
+  const w = 660, h = 190, pad = 40;
+  const min = Math.min(...pts.map(p => p.test_accuracy)) - 0.04;
+  const max = Math.max(...pts.map(p => p.test_accuracy)) + 0.04;
   const x = r => pad + (w - 2 * pad) * (r.round / (pts.length - 1));
-  const y = a => h - pad - (h - 2 * pad) * ((a - min) / (max - min));
+  const y = a => h - 40 - (h - 2 * pad) * ((a - min) / (max - min));
   const line = pts.map((p, i) => (i ? "L" : "M") + x(p).toFixed(1) + "," + y(p.test_accuracy).toFixed(1)).join(" ");
-  const dots = pts.map(p => '<circle cx="' + x(p).toFixed(1) + '" cy="' + y(p.test_accuracy).toFixed(1) + '" r="4" fill="#4353c4"><title>round ' + p.round + ": " + Math.round(p.test_accuracy * 100) + '%</title></circle>').join("");
-  const labels = pts.map(p => '<text x="' + x(p).toFixed(1) + '" y="' + (h - 12) + '" font-size="10" fill="#5b6478" text-anchor="middle">' + p.round + '</text>').join("");
+  const dots = pts.map(p =>
+    '<circle cx="' + x(p).toFixed(1) + '" cy="' + y(p.test_accuracy).toFixed(1) + '" r="4" fill="#3f5bd9">' +
+    '<title>round ' + p.round + ": " + Math.round(p.test_accuracy * 100) + '%</title></circle>').join("");
+  const labels = pts.map(p =>
+    '<text x="' + x(p).toFixed(1) + '" y="' + (h - 14) + '" font-size="10" fill="#8a92a6" text-anchor="middle">' + p.round + '</text>').join("");
   const yTicks = [min, (min + max) / 2, max].map(a =>
-    '<text x="' + (pad - 6) + '" y="' + (y(a) + 3).toFixed(1) + '" font-size="10" fill="#5b6478" text-anchor="end">' + Math.round(a * 100) + '%</text>').join("");
-  box.innerHTML = '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;max-width:640px">' +
-    '<line x1="' + pad + '" y1="' + (h - pad) + '" x2="' + (w - pad) + '" y2="' + (h - pad) + '" stroke="#e4e7f0"/>' +
-    '<path d="' + line + '" fill="none" stroke="#4353c4" stroke-width="2"/>' + dots + labels + yTicks +
-    '<text x="' + w / 2 + '" y="' + h + '" font-size="10" fill="#5b6478" text-anchor="middle">retraining round (0 = initial training)</text></svg>';
+    '<text x="' + (pad - 7) + '" y="' + (y(a) + 3.5).toFixed(1) + '" font-size="10" fill="#8a92a6" text-anchor="end">' + Math.round(a * 100) + '%</text>' +
+    '<line x1="' + pad + '" y1="' + y(a).toFixed(1) + '" x2="' + (w - pad) + '" y2="' + y(a).toFixed(1) + '" stroke="#e4e8f2"/>').join("");
+  box.innerHTML = '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;max-width:660px;display:block">' +
+    yTicks +
+    '<path d="' + line + '" fill="none" stroke="#3f5bd9" stroke-width="2.2" stroke-linecap="round"/>' + dots + labels +
+    '<text x="' + w / 2 + '" y="' + (h - 1) + '" font-size="9.5" fill="#8a92a6" text-anchor="middle">retraining round</text></svg>';
 }
 
 function drawRoundsTable(rounds) {
   const box = document.getElementById("roundsTable");
   if (!rounds.length) { box.innerHTML = ""; return; }
-  let html = '<table><tr><th>Round</th><th>When</th><th>New examples</th><th>Test accuracy</th><th>Old accuracy</th><th>Model updated?</th></tr>';
+  let html = '<table><tr><th>Round</th><th>When</th><th>New examples</th><th>Test accuracy</th><th>Previous</th><th>Model updated?</th></tr>';
   rounds.slice().reverse().forEach(r => {
-    html += '<tr><td>' + r.round + '</td><td>' + escapeHtml(r.timestamp) + '</td><td>' + r.n_new_examples +
-      '</td><td>' + Math.round(r.test_accuracy * 100) + '%</td><td>' +
+    html += '<tr><td class="num">' + r.round + '</td><td>' + escapeHtml(r.timestamp) + '</td><td class="num">+' + r.n_new_examples +
+      '</td><td class="num">' + Math.round(r.test_accuracy * 100) + '%</td><td class="num">' +
       (r.previous_test_accuracy != null ? Math.round(r.previous_test_accuracy * 100) + "%" : "—") +
-      '</td><td>' + (r.replaced ? "yes (v" + r.version + ")" : "no (kept old model)") + '</td></tr>';
+      '</td><td>' + (r.replaced ? '<span class="yes">yes (v' + r.version + ')</span>' : '<span class="no">no (kept old)</span>') + '</td></tr>';
   });
   box.innerHTML = html + "</table>";
 }
@@ -334,6 +500,10 @@ function drawRoundsTable(rounds) {
 function escapeHtml(s) {
   return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
+
+document.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); ask(); }
+});
 
 initExamples();
 </script>
